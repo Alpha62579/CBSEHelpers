@@ -12,4 +12,4 @@ I won't be putting this on PyPI since this is meant for personal use in the firs
 
 ## Install
 
-- `pip install https://github.com/Alpha62579/CBSEHelpers/releases/latest/download/CBSEHelpers-0.0.2-py3-none-any.whl`
+- `pip install https://github.com/Alpha62579/CBSEHelpers/archive/refs/heads/master.tar.gz`
