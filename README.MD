@@ -7,4 +7,4 @@ at school, I decided to pass it off as a library since 3rd party libraries are a
 
 ## Install
 
-- `pip install https://repos.alpha62579.repl.co/helpers`
+- `pip install https://github.com/Alpha62579/CBSEHelpers/releases/latest/download/CBSEHelpers-0.0.2-py3-none-any.whl`
