@@ -2,12 +2,12 @@
 This file contains functions for constructing user-navigation menus.
 """
 
-import os
 import sys
 import traceback
 from typing import Optional, List, Callable, Union, TypeVar, Any
 
 from .inputs import get_str
+from .utils import cls_scr, get_termsize, Align
 
 M = TypeVar('M', bound='Menu')
 
@@ -38,24 +38,11 @@ def option(name: Optional[str] = None, *, n: Optional[int] = None) -> Callable[[
     return decorator
 
 
-def _cls_scr():
-    """
-    Clears the screen.
-    """
-    # Check if any stupid IDE is running this
-    if 'PYCHARM_HOSTED' in os.environ:
-        return
-
-    if os.name == 'nt':
-        os.system('cls')
-    else:
-        os.system('clear')
-
-
 class Menu:
     """
     A class for creating menus.
     """
+
     def __init__(self, *, title: Optional[str] = None, subtitle: Optional[str] = None,
                  options: Optional[List[MenuOption]] = None, parent: Optional[M] = None) -> None:
         """
@@ -69,19 +56,16 @@ class Menu:
         self.subtitle = subtitle
         self._options = options or []
         self._parent = parent
-        try:
-            self._termsize = os.get_terminal_size().columns
-        except OSError:
-            self._termsize = 80
+        self._termsize = get_termsize()
 
         for attr in dir(self):
             if isinstance(getattr(self, attr), MenuOption):
                 self._options.append(getattr(self, attr))
 
-    def on_error(self, error: Exception):
+    def on_error(self, error: Exception) -> None:
         sys.stderr.write('\n'.join(traceback.format_tb(error.__traceback__)))
 
-    def on_exit(self):
+    def on_exit(self) -> None:
         pass
 
     def __str__(self) -> str:
@@ -91,28 +75,33 @@ class Menu:
         return f"<Menu={self.title} options={len(self._options)}>"
 
     def add_option(self, option: MenuOption) -> None:
+        """
+        Adds an option to the menu. It is recommended to use the @option decorator instead.
+        :param option: The option to add.
+        """
         self._options.append(option)
 
     def __pre_invoke(self):
-        _cls_scr()
+        cls_scr()
         self._options.sort(key=lambda x: x.n or 0)
 
-    def _invoke(self) -> None:
+    def _invoke(self, align=Align.LEFT) -> None:
         self.__pre_invoke()
         while True:
             try:
-                print(f"{self.title.center(self._termsize)}")
+                # Add support for aligning the title
+                print(f"{Align.align(self.title, align=align)}")
                 if self.subtitle is not None:
-                    print(f"{self.subtitle.center(self._termsize)}")
+                    print(f"{Align.align(self.subtitle, align=align)}")
                 print()
                 for i, option in enumerate(self._options):
-                    print(f"{i + 1}) {option.name}".center(self._termsize))
+                    print(Align.align(f"{i + 1}) {option.name}", align=align))
 
                 if self._parent is None:
-                    print(f"q) Exit".center(self._termsize))
+                    print(Align.align("q) Exit", align=align))
                 else:
-                    print(f"b) Go back".center(self._termsize))
-                    print(f"q) Return to main menu.".center(self._termsize))
+                    print(Align.align("b) Back", align=align))
+                    print(Align.align("q) Go back to the main menu", align=align))
 
                 choice = get_str("Enter your choice: ", error_str="Please enter a valid choice.",
                                  check=lambda x: x in '1234567890bq' and (
@@ -131,11 +120,11 @@ class Menu:
                         break
 
                 else:
-                    _cls_scr()
+                    cls_scr()
                     self._options[int(choice) - 1].callback(self)
                     print()
                     input("Press Enter to continue...")
-                    _cls_scr()
+                    cls_scr()
             except Exception as e:
                 self.on_error(e)
 

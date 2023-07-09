@@ -12,4 +12,5 @@ __license__ = "MIT"
 from .inputs import *
 from .menu import *
 from .table import *
+from . import utils as utils
 from . import menu as menu
