@@ -59,6 +59,7 @@ def format_table(rows: List[List[str]], *, border: Border = Border) -> List[str]
 
     return table
 
+
 def tablefy(rows: List[List[str]], *, border: Border = Border) -> None:
     """
     Prints a table.
