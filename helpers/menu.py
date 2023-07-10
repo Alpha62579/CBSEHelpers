@@ -81,6 +81,23 @@ class Menu:
         """
         self._options.append(option)
 
+    def option(self, name: Optional[str] = None, *, n: Optional[int] = None) -> Callable[[Callable], MenuOption]:
+        """
+        Decorator for adding an option to a menu.
+        :param name: The display name of the option. Defaults to the name of the function.
+        :param n: The position number of the function. Defaults to the order in which the functions are defined.
+                  Multiple options with the same value of n will result in alphabetical order being preferred.
+        :return: Callable[[Callable], MenuOption]
+        """
+
+        def decorator(func: Callable) -> MenuOption:
+            opt = MenuOption(name=name or func.__name__, callback=func, n=n)
+            self.add_option(opt)
+            return opt
+
+         return decorator
+
+
     def __pre_invoke(self):
         cls_scr()
         self._options.sort(key=lambda x: x.n or 0)
