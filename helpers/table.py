@@ -51,7 +51,7 @@ def format_table(rows: List[List[str]], *, headers: List[str] = [], split_entrie
             [str(headers[i]).center(max_char[i]) for i in range(len(headers))]) +
                      border.vertical)
         table.append(border.left_cross + border.cross.join(
-            [border.horizontal * max_char[i] for i in range(len(rows[0]))]) 
+            [border.horizontal * max_char[i] for i in range(len(rows[0]))]) + border.right_cross)
     for row in range(len(rows)):
         table.append(
             border.vertical + border.thin_vertical.join(
