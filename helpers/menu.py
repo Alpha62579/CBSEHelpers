@@ -95,7 +95,7 @@ class Menu:
             self.add_option(opt)
             return opt
 
-         return decorator
+        return decorator
 
 
     def __pre_invoke(self):
