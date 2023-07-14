@@ -44,23 +44,22 @@ def format_table(rows: List[List[str]], *, headers: List[str] = [], split_entrie
 
     max_char = [max([len(str(row[col])) + 2 for row in rows]) for col in range(len(rows[0]))]
 
-    for row in range(len(rows)):
-        table.append(border.top_left + border.top_cross.join(
+    table.append(border.top_left + border.top_cross.join(
                 [border.horizontal * max_char[i] for i in range(len(rows[0]))]) + border.top_right)
-        if headers is not None:
-            table.append(border.vertical + border.vertical.join(
-                [str(headers[i]).center(max_char[i]) for i in range(len(headers))]) +
-                         border.vertical)
+    if headers is not None:
+        table.append(border.vertical + border.vertical.join(
+            [str(headers[i]).center(max_char[i]) for i in range(len(headers))]) +
+                     border.vertical)
         table.append(border.left_cross + border.cross.join(
-            [border.horizontal * max_char[i] for i in range(len(rows[0]))]) + border.right_cross)
-        else:
-            table.append(
-                border.vertical + border.thin_vertical.join(
-                    [str(rows[row][i]).center(max_char[i]) for i in range(len(rows[0]))]) +
-                border.vertical)
-            if split_entries:
-                table.append(border.left_cross + border.cross.join(
-                    [border.horizontal * max_char[i] for i in range(len(rows[0]))]) + border.right_cross)
+            [border.horizontal * max_char[i] for i in range(len(rows[0]))]) 
+    for row in range(len(rows)):
+        table.append(
+            border.vertical + border.thin_vertical.join(
+                [str(rows[row][i]).center(max_char[i]) for i in range(len(rows[0]))]) +
+            border.vertical)
+        if split_entries and row != len(rows) - 1:
+            table.append(border.left_cross + border.cross.join(
+                [border.horizontal * max_char[i] for i in range(len(rows[0]))]) + border.right_cross)
     else:
         table.append(border.bottom_left + border.bottom_cross.join(
             [border.horizontal * max_char[i] for i in range(len(rows[0]))]) + border.bottom_right)
