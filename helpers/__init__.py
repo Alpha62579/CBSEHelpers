@@ -4,7 +4,7 @@ CBSEHelpers
 A collection of helper functions for my stupid CS project at school
 """
 
-__name__ = "CBSEHelpers"
+__name__ = "helpers"
 __author__ = "Alpha62579"
 __version__ = "0.0.3"
 __license__ = "MIT"
