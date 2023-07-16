@@ -3,6 +3,7 @@ A module that contains functions to convert a 2D list into a table.
 """
 
 from typing import List
+import copy
 
 
 class Border:
@@ -23,11 +24,11 @@ class Border:
     right_cross = "┤"
 
 
-def format_table(rows: List[List[str]], *, headers: List[str] = [], split_entries: bool = False, border: Border = Border) -> List[str]:
+def format_table(data: List[List[str]], *, headers: List[str] = [], split_entries: bool = False, border: Border = Border) -> List[str]:
     """
     Converts a 2D list into a table.
 
-    :param rows: A list of lists containing the data to be converted. The first list is the header.
+    :param data: A list of lists containing the data to be converted. The first list is the header.
                  The data must be strings or datatypes that can be converted to strings.
     :param headers: The header of the table. Defaults to the first row of the rows param. Pass `None` for
                  no header.
@@ -35,12 +36,13 @@ def format_table(rows: List[List[str]], *, headers: List[str] = [], split_entrie
     :param border: The border to use. Must be Border or a subclass of Border.
     :return: A list of strings that make up the table.
     """
-    if len(rows) != [len(i) for i in rows].count(len(rows[0])):
+    if len(data) != [len(i) for i in data].count(len(data[0])):
         raise Exception("Inconsistent data provided.")
 
+    rows = copy.deepcopy(data)
     table = []
     if headers == [] and headers is not None:
-        headers == rows.pop(0)
+        headers = rows.pop(0)
 
     max_char = [max([len(str(row[col])) + 2 for row in rows]) for col in range(len(rows[0]))]
 
