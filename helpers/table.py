@@ -69,15 +69,18 @@ def format_table(data: List[List[str]], *, headers: List[str] = [], split_entrie
     return table
 
 
-def tablefy(rows: List[List[str]], *, border: Border = Border) -> None:
+def tablefy(rows: List[List[str]], *, headers: List[str] = [], split_entries: bool = False, border: Border = Border) -> None:
     """
     Prints a table.
 
     :param rows: A list of lists containing the data to be converted. The first list is the header.
                  The data must be strings or datatypes that can be converted to strings.
+    :param headers: The header of the table. Defaults to the first row of the rows param. Pass `None` for
+                 no header.
+    :param split_entries: Split rows with horizontal lines. Defaults to `False`.
     :param border: The border to use. Must be Border or a subclass of Border.
     """
-    for row in format_table(rows, border=border):
+    for row in format_table(rows, headers=headers, split_entries=split_entries, border=border):
         print(row)
 
 
