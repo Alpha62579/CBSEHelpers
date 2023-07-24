@@ -145,8 +145,8 @@ class Menu:
             except Exception as e:
                 self.on_error(e)
 
-    def start(self):
-        self._invoke()
+    def start(self, align=Align.LEFT):
+        self._invoke(align=align)
 
 
 if __name__ == '__main__':
