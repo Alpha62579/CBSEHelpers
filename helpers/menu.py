@@ -13,7 +13,7 @@ M = TypeVar('M', bound='Menu')
 
 
 class MenuOption:
-    def __init__(self, *, name: str, callback: Union[Callable, M], n: Optional[int] = None) -> None:
+    def __init__(self, *, name: str, callback: Union[Callable, M], disabled: bool = False, n: Optional[int] = None) -> None:
         self.name = name
         self.callback = callback
         self.n = n
@@ -22,17 +22,18 @@ class MenuOption:
         pass
 
 
-def option(name: Optional[str] = None, *, n: Optional[int] = None) -> Callable[[Callable], MenuOption]:
+def option(name: Optional[str] = None, *, disabled: bool = False, n: Optional[int] = None) -> Callable[[Callable], MenuOption]:
     """
     Decorator for adding an option to a menu.
     :param name: The display name of the option. Defaults to the name of the function.
+    :param disabled: Sets whether this option is disabled or not. Defaults to `False`.
     :param n: The position number of the function. Defaults to the order in which the functions are defined.
               Multiple options with the same value of n will result in alphabetical order being preferred.
     :return: Callable[[Callable], MenuOption]
     """
 
     def decorator(func: Callable) -> MenuOption:
-        opt = MenuOption(name=name or func.__name__, callback=func, n=n)
+        opt = MenuOption(name=name or func.__name__, callback=func, disabled=disabled, n=n)
         return opt
 
     return decorator
@@ -83,17 +84,18 @@ class Menu:
         """
         self._options.append(option)
 
-    def option(self, name: Optional[str] = None, *, n: Optional[int] = None) -> Callable[[Callable], MenuOption]:
+    def option(self, name: Optional[str] = None, *, disabled: bool = False, n: Optional[int] = None) -> Callable[[Callable], MenuOption]:
         """
         Decorator for adding an option to a menu.
         :param name: The display name of the option. Defaults to the name of the function.
+        :param disabled: Sets whether this option is disabled or not. Defaults to `False`.
         :param n: The position number of the function. Defaults to the order in which the functions are defined.
                   Multiple options with the same value of n will result in alphabetical order being preferred.
         :return: Callable[[Callable], MenuOption]
         """
 
         def decorator(func: Callable) -> MenuOption:
-            opt = MenuOption(name=name or func.__name__, callback=func, n=n)
+            opt = MenuOption(name=name or func.__name__, callback=func, disabled=disabled, n=n)
             self.add_option(opt)
             return opt
 
@@ -113,7 +115,7 @@ class Menu:
                 if self.subtitle is not None:
                     print(f"{Align.align(self.subtitle, align=align)}")
                 print()
-                for i, option in enumerate(self._options):
+                for i, option in enumerate([opt for opt in self._options if not opt.disabled]):
                     print(Align.align(f"{i + 1}) {option.name}", align=align))
 
                 if self._parent is None:
