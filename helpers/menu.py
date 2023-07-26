@@ -64,6 +64,8 @@ class Menu:
 
     def on_error(self, error: Exception) -> None:
         sys.stderr.write('\n'.join(traceback.format_tb(error.__traceback__)))
+        input("Press Enter to continue...")
+        cls_scr()
 
     def on_exit(self) -> None:
         pass
