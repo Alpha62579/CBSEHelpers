@@ -45,12 +45,13 @@ class Menu:
     """
 
     def __init__(self, *, title: Optional[str] = None, subtitle: Optional[str] = None,
-                 options: Optional[List[MenuOption]] = None, parent: Optional[M] = None) -> None:
+                 options: Optional[List[MenuOption]] = None, align: Optional[int] = Align.LEFT, parent: Optional[M] = None) -> None:
         """
         :param title: The title of the menu. Defaults to the name of the class.
         :param subtitle: The subtitle of the menu. Defaults to None.
         :param options: A list of options for the menu. Defaults to None.
-                        It is recommended to use the @option decorator. instead
+                        It is recommended to use the @option decorator.
+        :param align: Sets the alignment of the menu. Defaults to the left.
         :param parent: Set this option to the parent menu instance if you intend 
                         to use this menu as a sub-menu.
         """
@@ -58,6 +59,7 @@ class Menu:
         self.subtitle = subtitle
         self._options = options or []
         self._parent = parent
+        self._align = align
         self._termsize = get_termsize()
 
         for attr in dir(self):
@@ -68,6 +70,22 @@ class Menu:
         sys.stderr.write('\n'.join(traceback.format_tb(error.__traceback__)))
         input("Press Enter to continue...")
         cls_scr()
+
+    def on_exit(self) -> None:
+        pass
+
+    def __str__(self) -> str:
+        return self.__repr__()
+
+    def __repr__(self) -> str:
+        return f"<Menu={self.title} options={len(self._options)}>"
+
+    def add_option(self, option: MenuOption) -> None:
+        """
+        Adds an option to the menu. It is recommended to use the @option decorator instead.
+        :param option: The option to add.
+        """
+        self._options.append(option)
 
     def get_option(self, *, n: Optional[int] = None, callback: Optional[Callable[[Any], Any]]) -> Optional[MenuOption]:
         """
@@ -87,22 +105,6 @@ class Menu:
         if callback is not None:
             return opts[0] if len((opts:=[opt for opt in self._options if opt.callback == callback])) > 0 else None
 
-    def on_exit(self) -> None:
-        pass
-
-    def __str__(self) -> str:
-        return self.__repr__()
-
-    def __repr__(self):
-        return f"<Menu={self.title} options={len(self._options)}>"
-
-    def add_option(self, option: MenuOption) -> None:
-        """
-        Adds an option to the menu. It is recommended to use the @option decorator instead.
-        :param option: The option to add.
-        """
-        self._options.append(option)
-
     def option(self, name: Optional[str] = None, *, disabled: bool = False, n: Optional[int] = None) -> Callable[[Callable], MenuOption]:
         """
         Decorator for adding an option to a menu.
@@ -120,28 +122,35 @@ class Menu:
 
         return decorator
 
+    def set_align(self, align: int):
+        """
+        Sets the alignment of the menu.
+
+        :param align: The alignment to use.
+        """
+        self._align = align
 
     def __pre_invoke(self):
         cls_scr()
         self._options.sort(key=lambda x: x.n or 0)
 
-    def _invoke(self, align=Align.LEFT) -> None:
+    def _invoke(self) -> None:
         self.__pre_invoke()
         while True:
             try:
                 # Add support for aligning the title
-                print(f"{Align.align(self.title, align=align)}")
+                print(f"{Align.align(self.title, align=self._align)}")
                 if self.subtitle is not None:
-                    print(f"{Align.align(self.subtitle, align=align)}")
+                    print(f"{Align.align(self.subtitle, align=self._align)}")
                 print()
                 for i, option in enumerate([opt for opt in self._options if not opt.disabled]):
-                    print(Align.align(f"{i + 1}) {option.name}", align=align))
+                    print(Align.align(f"{i + 1}) {option.name}", align=self._align))
 
                 if self._parent is None:
-                    print(Align.align("q) Exit", align=align))
+                    print(Align.align("q) Exit", align=self._align))
                 else:
-                    print(Align.align("b) Back", align=align))
-                    print(Align.align("q) Go back to the main menu", align=align))
+                    print(Align.align("b) Back", align=self._align))
+                    print(Align.align("q) Go back to the main menu", align=self._align))
 
                 choice = get_str("Enter your choice: ", error_str="Please enter a valid choice.",
                                  check=lambda x: x in '1234567890bq' and (
@@ -168,8 +177,8 @@ class Menu:
             except Exception as e:
                 self.on_error(e)
 
-    def start(self, align=Align.LEFT):
-        self._invoke(align=align)
+    def start(self):
+        self._invoke()
 
 
 if __name__ == '__main__':
