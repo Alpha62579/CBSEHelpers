@@ -54,3 +54,5 @@ class Align:
             return text.center(width)
         elif align == Align.RIGHT:
             return text.rjust(width)
+        else:
+            return text
