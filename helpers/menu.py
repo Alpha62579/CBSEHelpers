@@ -51,7 +51,8 @@ class Menu:
         :param subtitle: The subtitle of the menu. Defaults to None.
         :param options: A list of options for the menu. Defaults to None.
                         It is recommended to use the @option decorator. instead
-        :param parent:
+        :param parent: Set this option to the parent menu instance if you intend 
+                        to use this menu as a sub-menu.
         """
         self.title = title or self.__class__.__name__
         self.subtitle = subtitle
@@ -67,6 +68,24 @@ class Menu:
         sys.stderr.write('\n'.join(traceback.format_tb(error.__traceback__)))
         input("Press Enter to continue...")
         cls_scr()
+
+    def get_option(self, *, n: Optional[int] = None, callback: Optional[Callable[[Any], Any]]) -> Optional[MenuOption]:
+        """
+        Gets the relevant MenuOption based on either the position (as shown in menu) or the callback.
+        Returns the MenuOption or None if not found. Raises ValueError if both
+        `n` and `callback` are specified.
+
+        :param n: The position number to search for.
+        :param callback: The callback to search with.
+        """
+        if n is not None and callback is not None:
+            raise ValueError("Both n and callback params are specified.")
+
+        if n is not None:
+            return None if (n-1) > len(self._options) else self._options[n-1]
+
+        if callback is not None:
+            return opts[0] if len((opts:=[opt for opt in self._options if opt.callback == callback])) > 0 else None
 
     def on_exit(self) -> None:
         pass
