@@ -170,7 +170,7 @@ class Menu:
 
                 else:
                     cls_scr()
-                    self._options[int(choice) - 1].callback(self)
+                    self._options[int(choice) - 1].callback()
                     print()
                     input("Press Enter to continue...")
                     cls_scr()
