@@ -16,6 +16,7 @@ class MenuOption:
     def __init__(self, *, name: str, callback: Union[Callable, M], disabled: bool = False, n: Optional[int] = None) -> None:
         self.name = name
         self.callback = callback
+        self.disabled = disabled
         self.n = n
 
     def callback(self) -> Any:
