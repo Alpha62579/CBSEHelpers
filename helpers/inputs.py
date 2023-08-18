@@ -61,10 +61,7 @@ def get_bool(prompt: str, /, *, error_str: Optional[str] = "Please enter a valid
     while True:
         value = cinput(prompt).lower().strip()
         if value in difflib.get_close_matches(value, ('yes', 'no', 'true', 'false', '1', '0', 'y', 'n', 't', 'f', 'on', 'off', 'enable', 'disable', 'enabled', 'disabled')):
-            if value in ('yes', 'true', '1', 'y', 't', 'on', 'enable', 'enabled'):
-                return True
-            elif value in ('no', 'false', '0', 'n', 'f', 'off', 'disable', 'disabled'):
-                return False
+            return value in ('yes', 'true', '1', 'y', 't', 'on', 'enable', 'enabled')
         else:
             sys.stderr.write(error_str + '\n')
 
