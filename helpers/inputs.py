@@ -23,9 +23,9 @@ def get_int(prompt: str, /, *, error_str: Optional[str] = "Please enter a valid 
             if check(value):
                 return value
             else:
-                sys.stderr.write(error_str)
+                sys.stderr.write(error_str + "\n")
         except ValueError:
-            sys.stderr.write(error_str)
+            sys.stderr.write(error_str + "\n")
 
 
 def get_float(prompt: str, /, *, error_str: Optional[str] = "Please enter a valid input.",
@@ -44,9 +44,9 @@ def get_float(prompt: str, /, *, error_str: Optional[str] = "Please enter a vali
             if check(value):
                 return value
             else:
-                sys.stderr.write(error_str)
+                sys.stderr.write(error_str + "\n")
         except ValueError:
-            sys.stderr.write(error_str)
+            sys.stderr.write(error_str + "\n")
 
 
 def get_bool(prompt: str, /, *, error_str: Optional[str] = "Please enter a valid input.", cinput: Callable[[str], str] = input) -> bool:
@@ -84,7 +84,7 @@ def get_str(prompt: str, /, *, error_str: Optional[str] = "Please enter a valid 
         if check(value):
             return value
         else:
-            sys.stderr.write(error_str)
+            sys.stderr.write(error_str + "\n")
 
 
 if __name__ == '__main__':
