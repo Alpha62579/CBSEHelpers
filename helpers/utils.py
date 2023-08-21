@@ -27,7 +27,7 @@ def get_termsize() -> int:
     """
     try:
         return os.get_terminal_size().columns
-    except OSError:
+    except ValueError:
         return 80
 
 
