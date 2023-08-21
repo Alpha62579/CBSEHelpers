@@ -49,7 +49,7 @@ class Style:
 
 class Font:
     def __init__(
-        self, *styles: Style, fore: Fore = Fore.DEFAULT, back: Back = Back.DEFAULT
+        self, *styles: Style, fore: str = Fore.DEFAULT, back: str = Back.DEFAULT
     ) -> None:
         self.prefix = f'\033[{fore};{back}{(";" + ";".join(styles)) if styles else ""}m'
         self.fore = fore
@@ -69,7 +69,7 @@ class Font:
 
     @staticmethod
     def nformat(
-        text: str, *styles: Style, fore: Fore = Fore.DEFAULT, back: Back = Back.DEFAULT
+        text: str, *styles: Style, fore: str = Fore.DEFAULT, back: str = Back.DEFAULT
     ) -> str:
         return f'\033[{fore};{back}{(";" + ";".join(styles)) if styles else ""}m{text}\033[0m'
 
