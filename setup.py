@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="CBSEHelpers",
-    version="0.0.8",
+    version="0.0.9",
     author="Alpha62579",
     packages=["helpers"],
     license="MIT",
