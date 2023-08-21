@@ -75,32 +75,32 @@ class Font:
 
 
 def move_up(n: int) -> str:
-    return f"\033[{n}A"
+    print(f"\033[{n}A", end="")
 
 
 def move_down(n: int) -> str:
-    return f"\033[{n}B"
+    print(f"\033[{n}B", end="")
 
 
 def move_right(n: int) -> str:
-    return f"\033[{n}C"
+    print(f"\033[{n}C", end="")
 
 
 def move_left(n: int) -> str:
-    return f"\033[{n}D"
+    print(f"\033[{n}D", end="")
 
 
 def move_to(x: int, y: int) -> str:
-    return f"\033[{x};{y}H"
+    print(f"\033[{x};{y}H", end="")
 
 
 def clear_line() -> str:
-    return "\033[K"
+    print("\033[K", end="")
 
 
 def save_cursor() -> str:
-    return "\033[s"
+    print("\033[s", end="")
 
 
 def restore_cursor() -> str:
-    return "\033[u"
+    print("\033[u", end="")
