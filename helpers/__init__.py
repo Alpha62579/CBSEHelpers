@@ -11,6 +11,8 @@ __license__ = "MIT"
 
 __path__ = __import__("pkgutil").extend_path(__path__, __name__)
 
+import sys
+
 from . import menu as menu
 from . import utils as utils
 
