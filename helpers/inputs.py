@@ -7,8 +7,14 @@ import sys
 from typing import Optional, Callable
 
 
-def get_int(prompt: str, /, *, error_str: Optional[str] = "Please enter a valid input.",
-            check: Callable[[int], bool] = lambda x: True, cinput: Callable[[str], str] = input) -> int:
+def get_int(
+    prompt: str,
+    /,
+    *,
+    error_str: Optional[str] = "Please enter a valid input.",
+    check: Callable[[int], bool] = lambda x: True,
+    cinput: Callable[[str], str] = input,
+) -> int:
     """
     Gets an integer from the user.
     :param prompt: The prompt to display to the user.
@@ -23,13 +29,19 @@ def get_int(prompt: str, /, *, error_str: Optional[str] = "Please enter a valid 
             if check(value):
                 return value
             else:
-                sys.stderr.write(f'{error_str}\n')
+                sys.stderr.write(f"{error_str}\n")
         except ValueError:
-            sys.stderr.write(f'{error_str}\n')
+            sys.stderr.write(f"{error_str}\n")
 
 
-def get_float(prompt: str, /, *, error_str: Optional[str] = "Please enter a valid input.",
-              check: Callable[[float], bool] = lambda x: True, cinput: Callable[[str], str] = input) -> float:
+def get_float(
+    prompt: str,
+    /,
+    *,
+    error_str: Optional[str] = "Please enter a valid input.",
+    check: Callable[[float], bool] = lambda x: True,
+    cinput: Callable[[str], str] = input,
+) -> float:
     """
     Gets a float from the user.
     :param prompt: The prompt to display to the user.
@@ -44,12 +56,18 @@ def get_float(prompt: str, /, *, error_str: Optional[str] = "Please enter a vali
             if check(value):
                 return value
             else:
-                sys.stderr.write(f'{error_str}\n')
+                sys.stderr.write(f"{error_str}\n")
         except ValueError:
-            sys.stderr.write(f'{error_str}\n')
+            sys.stderr.write(f"{error_str}\n")
 
 
-def get_bool(prompt: str, /, *, error_str: Optional[str] = "Please enter a valid input.", cinput: Callable[[str], str] = input) -> bool:
+def get_bool(
+    prompt: str,
+    /,
+    *,
+    error_str: Optional[str] = "Please enter a valid input.",
+    cinput: Callable[[str], str] = input,
+) -> bool:
     """
     Gets a boolean from the user.
     This supports the usage of y/n, yes/no, true/false, and 1/0.
@@ -60,14 +78,40 @@ def get_bool(prompt: str, /, *, error_str: Optional[str] = "Please enter a valid
     """
     while True:
         value = cinput(prompt).lower().strip()
-        if value in difflib.get_close_matches(value, ('yes', 'no', 'true', 'false', '1', '0', 'y', 'n', 't', 'f', 'on', 'off', 'enable', 'disable', 'enabled', 'disabled')):
-            return value in ('yes', 'true', '1', 'y', 't', 'on', 'enable', 'enabled')
+        if value in difflib.get_close_matches(
+            value,
+            (
+                "yes",
+                "no",
+                "true",
+                "false",
+                "1",
+                "0",
+                "y",
+                "n",
+                "t",
+                "f",
+                "on",
+                "off",
+                "enable",
+                "disable",
+                "enabled",
+                "disabled",
+            ),
+        ):
+            return value in ("yes", "true", "1", "y", "t", "on", "enable", "enabled")
         else:
-            sys.stderr.write(f'{error_str}\n')
+            sys.stderr.write(f"{error_str}\n")
 
 
-def get_str(prompt: str, /, *, error_str: Optional[str] = "Please enter a valid input.",
-            check: Callable[[str], bool] = lambda x: True, cinput: Callable[[str], str] = input) -> str:
+def get_str(
+    prompt: str,
+    /,
+    *,
+    error_str: Optional[str] = "Please enter a valid input.",
+    check: Callable[[str], bool] = lambda x: True,
+    cinput: Callable[[str], str] = input,
+) -> str:
     """
     Gets a string from the user.
     :param prompt: The prompt to display to the user.
@@ -81,8 +125,8 @@ def get_str(prompt: str, /, *, error_str: Optional[str] = "Please enter a valid 
         if check(value):
             return value
         else:
-            sys.stderr.write(f'{error_str}\n')
+            sys.stderr.write(f"{error_str}\n")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     print("This file is not meant to be run directly.")

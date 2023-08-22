@@ -8,5 +8,5 @@ setup(
     license="MIT",
     description="A collection of helper functions for my stupid CS project at school",
     url="https://github.com/Alpha62579/CBSEHelpers",
-    python_requires='>=3.8.0'
+    python_requires=">=3.8.0",
 )

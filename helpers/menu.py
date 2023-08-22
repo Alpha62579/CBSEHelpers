@@ -9,11 +9,18 @@ from typing import Optional, List, Callable, Union, TypeVar, Any
 from .inputs import get_str
 from .utils import cls_scr, get_termsize, Align
 
-M = TypeVar('M', bound='Menu')
+M = TypeVar("M", bound="Menu")
 
 
 class MenuOption:
-    def __init__(self, *, name: str, callback: Union[Callable, M], disabled: bool = False, n: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        name: str,
+        callback: Union[Callable, M],
+        disabled: bool = False,
+        n: Optional[int] = None,
+    ) -> None:
         self.name = name
         self.callback = callback
         self.disabled = disabled
@@ -23,7 +30,9 @@ class MenuOption:
         pass
 
 
-def option(name: Optional[str] = None, *, disabled: bool = False, n: Optional[int] = None) -> Callable[[Callable], MenuOption]:
+def option(
+    name: Optional[str] = None, *, disabled: bool = False, n: Optional[int] = None
+) -> Callable[[Callable], MenuOption]:
     """
     Decorator for adding an option to a menu.
     :param name: The display name of the option. Defaults to the name of the function.
@@ -34,7 +43,9 @@ def option(name: Optional[str] = None, *, disabled: bool = False, n: Optional[in
     """
 
     def decorator(func: Callable) -> MenuOption:
-        opt = MenuOption(name=name or func.__name__, callback=func, disabled=disabled, n=n)
+        opt = MenuOption(
+            name=name or func.__name__, callback=func, disabled=disabled, n=n
+        )
         return opt
 
     return decorator
@@ -45,15 +56,22 @@ class Menu:
     A class for creating menus.
     """
 
-    def __init__(self, *, title: Optional[str] = None, subtitle: Optional[str] = None,
-                 options: Optional[List[MenuOption]] = None, align: Optional[int] = Align.LEFT, parent: Optional[M] = None) -> None:
+    def __init__(
+        self,
+        *,
+        title: Optional[str] = None,
+        subtitle: Optional[str] = None,
+        options: Optional[List[MenuOption]] = None,
+        align: Optional[int] = Align.LEFT,
+        parent: Optional[M] = None,
+    ) -> None:
         """
         :param title: The title of the menu. Defaults to the name of the class.
         :param subtitle: The subtitle of the menu. Defaults to None.
         :param options: A list of options for the menu. Defaults to None.
                         It is recommended to use the @option decorator.
         :param align: Sets the alignment of the menu. Defaults to the left.
-        :param parent: Set this option to the parent menu instance if you intend 
+        :param parent: Set this option to the parent menu instance if you intend
                         to use this menu as a sub-menu.
         """
         self.title = title or self.__class__.__name__
@@ -68,7 +86,7 @@ class Menu:
                 self._options.append(getattr(self, attr))
 
     def on_error(self, error: Exception) -> None:
-        sys.stderr.write('\n'.join(traceback.format_tb(error.__traceback__)))
+        sys.stderr.write("\n".join(traceback.format_tb(error.__traceback__)))
         input("Press Enter to continue...")
         cls_scr()
 
@@ -88,7 +106,9 @@ class Menu:
         """
         self._options.append(option)
 
-    def get_option(self, *, n: Optional[int] = None, callback: Optional[Callable[[Any], Any]]) -> Optional[MenuOption]:
+    def get_option(
+        self, *, n: Optional[int] = None, callback: Optional[Callable[[Any], Any]]
+    ) -> Optional[MenuOption]:
         """
         Gets the relevant MenuOption based on either the position (as shown in menu) or the callback.
         Returns the MenuOption or None if not found. Raises ValueError if both
@@ -101,12 +121,25 @@ class Menu:
             raise ValueError("Both n and callback params are specified.")
 
         if n is not None:
-            return None if (n-1) > len(self._options) else self._options[n-1]
+            return None if (n - 1) > len(self._options) else self._options[n - 1]
 
         if callback is not None:
-            return opts[0] if len((opts:=[opt for opt in self._options if opt.callback == callback])) > 0 else None
+            return (
+                opts[0]
+                if len(
+                    (opts := [opt for opt in self._options if opt.callback == callback])
+                )
+                > 0
+                else None
+            )
 
-    def option(self, name: Optional[str] = None, *, disabled: bool = False, n: Optional[int] = None) -> Callable[[Callable], MenuOption]:
+    def option(
+        self,
+        name: Optional[str] = None,
+        *,
+        disabled: bool = False,
+        n: Optional[int] = None,
+    ) -> Callable[[Callable], MenuOption]:
         """
         Decorator for adding an option to a menu.
         :param name: The display name of the option. Defaults to the name of the function.
@@ -117,7 +150,9 @@ class Menu:
         """
 
         def decorator(func: Callable) -> MenuOption:
-            opt = MenuOption(name=name or func.__name__, callback=func, disabled=disabled, n=n)
+            opt = MenuOption(
+                name=name or func.__name__, callback=func, disabled=disabled, n=n
+            )
             self.add_option(opt)
             return opt
 
@@ -144,7 +179,9 @@ class Menu:
                 if self.subtitle is not None:
                     print(f"{Align.align(self.subtitle, align=self._align)}")
                 print()
-                for i, option in enumerate([opt for opt in self._options if not opt.disabled]):
+                for i, option in enumerate(
+                    [opt for opt in self._options if not opt.disabled]
+                ):
                     print(Align.align(f"{i + 1}) {option.name}", align=self._align))
 
                 if self._parent is None:
@@ -153,13 +190,16 @@ class Menu:
                     print(Align.align("b) Back", align=self._align))
                     print(Align.align("q) Go back to the main menu", align=self._align))
 
-                choice = get_str("Enter your choice: ", error_str="Please enter a valid choice.",
-                                 check=lambda x: x in '1234567890bq' and (
-                                     0 <= int(x) <= len(self._options) if x.isdigit() else True) and (
-                                                         x != 'b' or self._parent is not None))
-                if choice == 'b':
+                choice = get_str(
+                    "Enter your choice: ",
+                    error_str="Please enter a valid choice.",
+                    check=lambda x: x in "1234567890bq"
+                    and (0 <= int(x) <= len(self._options) if x.isdigit() else True)
+                    and (x != "b" or self._parent is not None),
+                )
+                if choice == "b":
                     self._parent.invoke()
-                if choice == 'q':
+                if choice == "q":
                     if self._parent is not None:
                         temp = self
                         while temp._parent is not None:
@@ -182,5 +222,5 @@ class Menu:
         self._invoke()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     print("This file is not meant to be run directly.")

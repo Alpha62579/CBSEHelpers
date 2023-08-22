@@ -2,14 +2,6 @@
 Functions related to terminal fonts
 """
 
-import sys
-
-if getattr(sys.stdout, "shell", False):
-    sys.stderr.write("Warning: tty module is not compatible with the current shell\n")
-    sys.stderr.write("Warning: tty module will not be loaded\n")
-    sys.stderr.flush()
-    raise ImportError
-
 
 class Fore:
     BLACK = "30"

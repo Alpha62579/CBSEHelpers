@@ -11,13 +11,13 @@ def cls_scr() -> None:
     Clears the screen.
     """
     # Check if any stupid IDE is running this
-    if 'PYCHARM_HOSTED' in os.environ:
+    if "PYCHARM_HOSTED" in os.environ:
         return
 
-    if os.name == 'nt':
-        os.system('cls')
+    if os.name == "nt":
+        os.system("cls")
     else:
-        os.system('clear')
+        os.system("clear")
 
 
 def get_termsize() -> int:
@@ -35,12 +35,15 @@ class Align:
     """
     An enum for text alignment.
     """
+
     LEFT = 0
     CENTER = 1
     RIGHT = 2
 
     @classmethod
-    def align(cls, text: str, width: Optional[int] = get_termsize(), align: Optional[int] = 0) -> str:
+    def align(
+        cls, text: str, width: Optional[int] = get_termsize(), align: Optional[int] = 0
+    ) -> str:
         """
         Aligns text.
         :param text: The text to align.

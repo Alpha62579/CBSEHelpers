@@ -10,6 +10,7 @@ class Border:
     """
     A class that contains the characters used to draw the table.
     """
+
     top_left = "┌"
     top_right = "┐"
     bottom_left = "└"
@@ -24,7 +25,13 @@ class Border:
     right_cross = "┤"
 
 
-def format_table(data: List[List[str]], *, headers: List[str] = [], split_entries: bool = False, border: Border = Border) -> List[str]:
+def format_table(
+    data: List[List[str]],
+    *,
+    headers: List[str] = [],
+    split_entries: bool = False,
+    border: Border = Border
+) -> List[str]:
     """
     Converts a 2D list into a table.
 
@@ -44,32 +51,67 @@ def format_table(data: List[List[str]], *, headers: List[str] = [], split_entrie
     if headers == [] and headers is not None:
         headers = rows.pop(0)
 
-    max_char = [max([len(str(row[col])) + 2 for row in rows]) for col in range(len(rows[0]))]
+    max_char = [
+        max([len(str(row[col])) + 2 for row in rows]) for col in range(len(rows[0]))
+    ]
 
-    table.append(border.top_left + border.top_cross.join(
-                [border.horizontal * max_char[i] for i in range(len(rows[0]))]) + border.top_right)
+    table.append(
+        border.top_left
+        + border.top_cross.join(
+            [border.horizontal * max_char[i] for i in range(len(rows[0]))]
+        )
+        + border.top_right
+    )
     if headers is not None:
-        table.append(border.vertical + border.vertical.join(
-            [str(headers[i]).center(max_char[i]) for i in range(len(headers))]) +
-                     border.vertical)
-        table.append(border.left_cross + border.cross.join(
-            [border.horizontal * max_char[i] for i in range(len(rows[0]))]) + border.right_cross)
+        table.append(
+            border.vertical
+            + border.vertical.join(
+                [str(headers[i]).center(max_char[i]) for i in range(len(headers))]
+            )
+            + border.vertical
+        )
+        table.append(
+            border.left_cross
+            + border.cross.join(
+                [border.horizontal * max_char[i] for i in range(len(rows[0]))]
+            )
+            + border.right_cross
+        )
     for row in range(len(rows)):
         table.append(
-            border.vertical + border.thin_vertical.join(
-                [str(rows[row][i]).center(max_char[i]) for i in range(len(rows[0]))]) +
-            border.vertical)
+            border.vertical
+            + border.thin_vertical.join(
+                [str(rows[row][i]).center(max_char[i]) for i in range(len(rows[0]))]
+            )
+            + border.vertical
+        )
         if split_entries and row != len(rows) - 1:
-            table.append(border.left_cross + border.cross.join(
-                [border.horizontal * max_char[i] for i in range(len(rows[0]))]) + border.right_cross)
+            table.append(
+                border.left_cross
+                + border.cross.join(
+                    [border.horizontal * max_char[i] for i in range(len(rows[0]))]
+                )
+                + border.right_cross
+            )
     else:
-        table.append(border.bottom_left + border.bottom_cross.join(
-            [border.horizontal * max_char[i] for i in range(len(rows[0]))]) + border.bottom_right)
+        table.append(
+            border.bottom_left
+            + border.bottom_cross.join(
+                [border.horizontal * max_char[i] for i in range(len(rows[0]))]
+            )
+            + border.bottom_right
+        )
 
     return table
 
 
-def tablefy(data: List[List[str]], *, headers: List[str] = [], split_entries: bool = False, border: Border = Border) -> None:
+def tablefy(
+    data: List[List[str]],
+    *,
+    headers: List[str] = [],
+    split_entries: bool = False,
+    border: Border = Border
+) -> None:
     """
     Prints a table.
     Basically a handy shortcut for directly printing the table from format_table.
@@ -81,8 +123,14 @@ def tablefy(data: List[List[str]], *, headers: List[str] = [], split_entries: bo
     :param split_entries: Split rows with horizontal lines. Defaults to `False`.
     :param border: The border to use. Must be Border or a subclass of Border.
     """
-    print('\n'.join(format_table(data, headers=headers, split_entries=split_entries, border=border)))
+    print(
+        "\n".join(
+            format_table(
+                data, headers=headers, split_entries=split_entries, border=border
+            )
+        )
+    )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     print("This file is not meant to be run directly.")
