@@ -12,5 +12,7 @@ those unlucky people, feel free to make your own fork and change the name.
 I won't be putting this on PyPI since this is meant for personal use in the first place.
 
 ## Install
-
-- `pip install https://github.com/Alpha62579/CBSEHelpers/archive/refs/heads/master.tar.gz`
+- For the absolute chads who use git
+  - `pip install git+https://github.com/Alpha62579/CBSEHelpers`
+- For the people who don't use git (seriously, install it already. Its just one command..)
+  - `pip install https://github.com/Alpha62579/CBSEHelpers/archive/refs/heads/master.tar.gz`
