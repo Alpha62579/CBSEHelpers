@@ -193,7 +193,7 @@ class Menu:
                 choice = get_str(
                     "Enter your choice: ",
                     error_str="Please enter a valid choice.",
-                    check=lambda x: x in "1234567890bq"
+                    check=lambda x: x and x in "1234567890bq"
                     and (0 <= int(x) <= len(self._options) if x.isdigit() else True)
                     and (x != "b" or self._parent is not None),
                 )
